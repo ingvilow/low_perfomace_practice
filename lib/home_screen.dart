@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:low_perfomace_practice/animal_avatars.dart';
 import 'package:low_perfomace_practice/detail_bottom_sheet.dart';
-import 'package:low_perfomace_practice/item_avatar.dart';
 import 'package:low_perfomace_practice/item_model.dart';
 import 'package:low_perfomace_practice/mock_repository.dart';
 
@@ -17,12 +17,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Iterable<ItemModel>? items;
+  List<ItemModel> items = [];
 
   @override
   void initState() {
     super.initState();
-
     items = widget.repository.getItems();
   }
 
@@ -30,39 +29,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Low Performance App')),
-      body: items == null
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                children: (items ?? [])
-                    .map(
-                      (item) => ValueListenableBuilder<bool>(
-                        valueListenable: item.isFavorite,
-                        builder: (_, isFavorite, __) {
-                          return ListTile(
-                            trailing: Checkbox(
-                              value: isFavorite,
-                              onChanged: (value) =>
-                                  item.isFavorite.value = value ?? false,
-                            ),
-                            subtitle: Text(item.subtitle),
-                            title: Text(item.title),
-                            leading: ClipOval(
-                              child: ItemAvatarWidget(
-                                imageLink: item.imageLink,
-                                itemTitle: item.title,
-                              ),
-                            ),
-                            onTap: () => _showDetail(context, item),
-                          );
-                        },
-                      ),
-                    )
-                    .toList(),
-              ),
+      body: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            subtitle: Text(items[index].title),
+            title: Text(items[index].subtitle),
+            leading: AnimalAvatars(
+              itemModel: items[index],
             ),
+            onTap: () => _showDetail(context, items[index]),
+            trailing: ValueListenableBuilder<bool>(
+              valueListenable: items[index].isFavorite,
+              builder: (_, isFavorite, __) {
+                return Checkbox(
+                  value: isFavorite,
+                  onChanged: (isChecked) =>
+                      items[index].isFavorite.value = isChecked ?? false,
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 
