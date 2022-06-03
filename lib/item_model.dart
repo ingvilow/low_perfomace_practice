@@ -5,10 +5,9 @@ class ItemModel {
   final String title;
   final String subtitle;
   final String imageLink;
+  final ValueNotifier<bool> isFavorite;
 
-  ValueNotifier<bool> isFavorite = ValueNotifier(false);
-
-  ItemModel({
+  const ItemModel({
     required this.id,
     required this.title,
     required this.subtitle,

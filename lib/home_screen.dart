@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:low_perfomace_practice/animal_avatars.dart';
 import 'package:low_perfomace_practice/detail_bottom_sheet.dart';
-import 'package:low_perfomace_practice/item_avatar.dart';
 import 'package:low_perfomace_practice/item_model.dart';
 import 'package:low_perfomace_practice/mock_repository.dart';
 
@@ -32,21 +32,23 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView.builder(
         itemCount: items.length,
         itemBuilder: (context, index) {
-          return ValueListenableBuilder<bool>(
-            valueListenable: items[index].isFavorite,
-            builder: (_, isFavorite, __) {
-              return ListTile(
-                subtitle: Text(items[index].title),
-                title: Text(items[index].subtitle),
-                trailing: Checkbox(
+          return ListTile(
+            subtitle: Text(items[index].title),
+            title: Text(items[index].subtitle),
+            leading: AnimalAvatars(
+              itemModel: items[index],
+            ),
+            onTap: () => _showDetail(context, items[index]),
+            trailing: ValueListenableBuilder<bool>(
+              valueListenable: items[index].isFavorite,
+              builder: (_, isFavorite, __) {
+                return Checkbox(
                   value: isFavorite,
                   onChanged: (isChecked) =>
                       items[index].isFavorite.value = isChecked ?? false,
-                ),
-                leading: _itemAvatar(items[index]),
-                onTap: () => _showDetail(context, items[index]),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),
@@ -60,28 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return DetailBottomSheet(item: item);
       },
-    );
-  }
-
-  Widget _itemAvatar(ItemModel itemModel) {
-    return ClipOval(
-      child: CircleAvatar(
-        child: Image.network(
-          itemModel.imageLink,
-          fit: BoxFit.cover,
-          width: 100,
-          height: 95,
-          cacheHeight: 110,
-          cacheWidth: 110,
-          errorBuilder: (_, __, ___) => CircleAvatar(
-            backgroundColor: Colors.black12,
-            child: Text(
-              itemModel.title.substring(0, 1),
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

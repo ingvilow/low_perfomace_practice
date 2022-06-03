@@ -41,13 +41,13 @@ class MockRepository {
     final titleIndex = Random().nextInt(_words.length);
     final subtitleIndex = Random().nextInt(_words.length);
     final imageIndex = Random().nextInt(_imageLinks.length);
-    final favorutite = ValueNotifier(false);
+    final isFavorite = ValueNotifier<bool>(false);
     return ItemModel(
       id: index,
       title: _words[titleIndex],
       subtitle: _words[subtitleIndex],
       imageLink: _imageLinks[imageIndex],
-      isFavorite: favorutite,
+      isFavorite: isFavorite,
     );
   }
 }
