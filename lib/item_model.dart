@@ -6,12 +6,13 @@ class ItemModel {
   final String subtitle;
   final String imageLink;
 
-  final isFavorite = ValueNotifier(false);
+  ValueNotifier<bool> isFavorite = ValueNotifier(false);
 
   ItemModel({
     required this.id,
     required this.title,
     required this.subtitle,
     required this.imageLink,
+    required this.isFavorite,
   });
 }

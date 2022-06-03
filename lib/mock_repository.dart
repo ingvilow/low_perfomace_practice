@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:low_perfomace_practice/item_model.dart';
 
 class MockRepository {
@@ -34,18 +35,19 @@ class MockRepository {
     'https://www.nastol.com.ua/pic/201704/1920x1200/nastol.com.ua-216959.jpg',
   ];
 
-  Iterable<ItemModel> getItems() => List.generate(1000, _getRandomItem);
+  List<ItemModel> getItems() => List.generate(1000, _getRandomItem);
 
   ItemModel _getRandomItem(int index) {
     final titleIndex = Random().nextInt(_words.length);
     final subtitleIndex = Random().nextInt(_words.length);
     final imageIndex = Random().nextInt(_imageLinks.length);
-
+    final favorutite = ValueNotifier(false);
     return ItemModel(
       id: index,
       title: _words[titleIndex],
       subtitle: _words[subtitleIndex],
       imageLink: _imageLinks[imageIndex],
+      isFavorite: favorutite,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/*
 class ItemAvatarWidget extends StatelessWidget {
   final String imageLink;
   final String itemTitle;
@@ -28,3 +29,4 @@ class ItemAvatarWidget extends StatelessWidget {
     );
   }
 }
+*/

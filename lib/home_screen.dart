@@ -17,12 +17,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Iterable<ItemModel>? items;
+  List<ItemModel> items = [];
 
   @override
   void initState() {
     super.initState();
-
     items = widget.repository.getItems();
   }
 
@@ -30,39 +29,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Low Performance App')),
-      body: items == null
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                children: (items ?? [])
-                    .map(
-                      (item) => ValueListenableBuilder<bool>(
-                        valueListenable: item.isFavorite,
-                        builder: (_, isFavorite, __) {
-                          return ListTile(
-                            trailing: Checkbox(
-                              value: isFavorite,
-                              onChanged: (value) =>
-                                  item.isFavorite.value = value ?? false,
-                            ),
-                            subtitle: Text(item.subtitle),
-                            title: Text(item.title),
-                            leading: ClipOval(
-                              child: ItemAvatarWidget(
-                                imageLink: item.imageLink,
-                                itemTitle: item.title,
-                              ),
-                            ),
-                            onTap: () => _showDetail(context, item),
-                          );
-                        },
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
+      body: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return ValueListenableBuilder<bool>(
+            valueListenable: items[index].isFavorite,
+            builder: (_, isFavorite, __) {
+              return ListTile(
+                subtitle: Text(items[index].title),
+                title: Text(items[index].subtitle),
+                trailing: Checkbox(
+                  value: isFavorite,
+                  onChanged: (isChecked) =>
+                      items[index].isFavorite.value = isChecked ?? false,
+                ),
+                leading: _itemAvatar(items[index]),
+                onTap: () => _showDetail(context, items[index]),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -73,6 +60,28 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return DetailBottomSheet(item: item);
       },
+    );
+  }
+
+  Widget _itemAvatar(ItemModel itemModel) {
+    return ClipOval(
+      child: CircleAvatar(
+        child: Image.network(
+          itemModel.imageLink,
+          fit: BoxFit.cover,
+          width: 100,
+          height: 95,
+          cacheHeight: 110,
+          cacheWidth: 110,
+          errorBuilder: (_, __, ___) => CircleAvatar(
+            backgroundColor: Colors.black12,
+            child: Text(
+              itemModel.title.substring(0, 1),
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

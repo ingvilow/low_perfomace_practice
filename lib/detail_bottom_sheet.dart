@@ -20,35 +20,24 @@ class DetailBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ItemAvatarWidget(
-              imageLink: item.imageLink,
-              itemTitle: item.title,
+            ClipRRect(
+              child: Image.network(
+                item.imageLink,
+                cacheWidth: 110,
+                cacheHeight: 110,
+                fit: BoxFit.fill,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          item.title,
-                          style: Theme.of(context).textTheme.headline2,
-                        ),
-                        Text(
-                          item.subtitle,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Checkbox(
-                    value: isFavorite,
-                    onChanged: (isChecked) =>
-                        item.isFavorite.value = isChecked ?? false,
-                  ),
-                ],
+              child: ListTile(
+                title: Text(item.title),
+                subtitle: Text(item.subtitle),
+                trailing: Checkbox(
+                  value: isFavorite,
+                  onChanged: (isChecked) =>
+                      item.isFavorite.value = isChecked ?? false,
+                ),
               ),
             ),
           ],
